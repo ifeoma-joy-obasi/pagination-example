@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pagination</title>
+    <style>
+        :root{
+            --text-color: #6e6e80;
+        }
+
+        *{
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+        
+        .pagination{
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        padding: 15px 10px;
+        width: 400px;
+        border-top: 1px solid #6e6e80;
+        }
+
+        .pagination button{
+            all: unset;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .page-number{
+            margin: 0 30px;
+        }
+    </style>
+</head>
+<body>
+
+<section  id="wrapper">
+<ul id="listContainer"></ul>
+<section class="pagination">
+<p>
+<span class="gray-text">Displaying</span>
+<b><span id="currentPage">1</span>-<span id="totalPage">3</span></b>
+<span class="gray-text" id="totalItems">Of 3</span>
+</p>
+<div>
+    <button id="prev">Previous</button>
+    <b class="page-number">1</b>
+    <button id="next">Next</button>
+</div>
+</section>
+</section>
+
+<script>
+
+const ITEMS_PER_PAGE = 3;
+
+    const pagination = {
+        pageNumber:1,
+        increasePageNumber: ()=>{
+            pagination.pageNumber++;
+            return pagination.pageNumber;
+        },
+        decreasePageNumber: ()=>{
+            pagination.pageNumber--;
+            return pagination.pageNumber;
+        }
+    }
+
+const paginate = (list, itemsPerPage, pageNumber)=>{
+return list.slice(
+(pageNumber-1)*itemsPerPage,
+pageNumber*itemsPerPage
+);
+}
+
+
+listOfItems = [
+    'item1',
+    'item2',
+    'item3',
+    'item4',
+    'item5',
+    'item6',
+    'item7',
+    'item8',
+    'item9',
+    'item10',
+    'item11',
+    'item12',
+    'item13',
+    'item14',
+    'item15',
+    'item16',
+];
+
+const listContainer = document.querySelector('#listContainer');
+const prevButton = document.querySelector('#prev');
+const nextButton = document.querySelector('#next');
+
+const displayData = (data)=>{
+    listContainer.innerHTML = '';
+data.map((item)=>{
+    let li = document.createElement('li');
+    li.innerText=item;
+    listContainer.appendChild(li);
+});
+document.querySelector('#totalPage').innerText = Math.ceil(listOfItems.length/ITEMS_PER_PAGE);
+document.querySelector('#currentPage').innerText = pagination.pageNumber;
+document.querySelector('#totalItems').innerText=`Of ${listOfItems.length}`;
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+    listContainer.innerHTML = '';
+    let data = paginate(listOfItems, ITEMS_PER_PAGE, 1);
+    displayData(data);
+
+})
+
+nextButton.addEventListener('click', ()=>{
+let data = paginate(listOfItems, ITEMS_PER_PAGE,  pagination.increasePageNumber());
+displayData(data);
+})
+
+prevButton.addEventListener('click', ()=>{
+    let data = paginate(listOfItems, ITEMS_PER_PAGE, pagination.decreasePageNumber());
+    displayData(data);
+})
+
+</script>
+</body>
+</html>
